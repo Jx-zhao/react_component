@@ -1,9 +1,5 @@
 
-
-
 // 函数防抖的实现
-
-
 /**
  * 防抖函数
  * @param {*} cb     回调函数
@@ -21,15 +17,23 @@ const debounce = (cb,delay = 1000) =>{
 }
 const throttle = (cb,delay = 1000)=>{
   let isWaiting = false;
+  let lastAges
+  const timeOutFn = ()=>{
+    if(lastAges){
+      cb(...lastAges);
+      lastAges = null;
+      setTimeout(timeOutFn,delay);
+    }else{
+      isWaiting = false;
+    }
+  }
   return (...ages) =>{
-    if(isWaiting) return;
+    if(isWaiting){
+      lastAges = ages
+      return;
+    } 
     cb(...ages);
     isWaiting = true;
-    setTimeout(()=>{
-      isWaiting = false;
-    },delay)
+    setTimeout(timeOutFn,delay)
   }
 }
-const setDebouncetxt = debounce((txt)=>{
-  
-})
